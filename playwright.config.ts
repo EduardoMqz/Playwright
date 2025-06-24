@@ -13,14 +13,14 @@ import { defineConfig, devices } from '@playwright/test';
  */
 const config = ({
   testDir: './tests',//folder where the test are located
-  timeout: 40*1000, //for element on screen
+  timeout: 25 * 1000, //for element on screen
   expect: {
-    timeout: 40*1000 //for assert
+    timeout: 25 * 1000 //for assert
   },
   reporter: 'html',
   use: {
     browserName: 'chromium',
-    headless: false
+    headless: true
   },
 });
 module.exports = config
