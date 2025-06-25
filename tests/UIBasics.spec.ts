@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import assert from "assert";
+
 
 test('First Playwright Test', async ({browser}) => {
     //create context --- plugins/cookies
@@ -25,11 +25,15 @@ test('Sucessfull login', async({page}) =>{
     await page.locator('#username').fill('rahulshettyacademy');
     await page.locator("[name='password']").fill('learning');
     await page.locator(".btn-info").click();
-    const title = await page.locator(".card-body .card-title a").nth(0).textContent();
-    console.log(title);
-    console.log(await page.locator(".card-body .card-title a").first().textContent());
-
-
+    const cardTitle = await page.locator(".card-body .card-title a");
+    console.log(await cardTitle.first().textContent());
+    console.log(await cardTitle.nth(1).textContent());
+    //get all products title
+    const allTitles = await cardTitle.allTextContents();
+    console.log(allTitles);
+    //validate that title contain partial matching
+    const hasTitle = allTitles.some(title => title.includes("iphone"));
+    await expect(hasTitle).toBeTruthy();
 });
 
 test('Incorrect  username/password.', async({page}) =>{
