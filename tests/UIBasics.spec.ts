@@ -25,6 +25,11 @@ test('Sucessfull login', async({page}) =>{
     await page.locator('#username').fill('rahulshettyacademy');
     await page.locator("[name='password']").fill('learning');
     await page.locator(".btn-info").click();
+    const title = await page.locator(".card-body .card-title a").nth(0).textContent();
+    console.log(title);
+    console.log(await page.locator(".card-body .card-title a").first().textContent());
+
+
 });
 
 test('Incorrect  username/password.', async({page}) =>{
