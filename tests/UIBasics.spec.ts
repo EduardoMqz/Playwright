@@ -72,3 +72,19 @@ test('Incorrect  username/password.', async ({ page }) => {
     const failedLoginMsg = await page.locator("[style*='block']");
     await expect(failedLoginMsg).toContainText("Incorrect username/password.");
 });
+
+test("Child window handling", async ({browser}) =>{
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.goto("https://rahulshettyacademy.com/loginpagePractise");
+    const documentLink = page.locator("[href*='documents-request']");
+    const [newPage] = await Promise.all([
+        context.waitForEvent("page"), //listen for any new page
+        documentLink.click()
+    ]);
+     // new page is open
+    const text = await newPage.locator(".red").textContent();
+    const arraytext = text.split("@");
+    const domain = arraytext[1].split(" ")[0];
+    await page.locator("#username").fill(domain);
+})
