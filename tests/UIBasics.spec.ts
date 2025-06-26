@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 
-test('First Playwright Test', async ({browser}) => {
+test('First Playwright Test', async ({ browser }) => {
     //create context --- plugins/cookies
     const context = await browser.newContext();
     const page = await context.newPage();
@@ -14,16 +14,20 @@ test.only('default Playwright test', async({page}) =>{  only run the test that c
 });
 **/
 
-test('Sucessfull login', async({page}) =>{
+test('Sucessfull login', async ({ page }) => {
     await page.goto('https://rahulshettyacademy.com/loginpagePractise/');
-    
-    //get title - assertion
-    await expect(page).toHaveTitle(/LoginPage Practise | Rahul Shetty Academy/);
-    console.log(await page.title());
 
+    //get title - assertion
+    await expect(page).toHaveTitle("LoginPage Practise | Rahul Shetty Academy");
+    console.log(await page.title());
     //selector css,xpath
     await page.locator('#username').fill('rahulshettyacademy');
     await page.locator("[name='password']").fill('learning');
+    const dropdown = await page.locator("select.form-control");
+    await dropdown.selectOption("teach");
+    const adminRadioButton = await page.locator(".radiotextsty").first();
+    await adminRadioButton.click();
+    await adminRadioButton.isChecked();
     await page.locator(".btn-info").click();
     const cardTitle = await page.locator(".card-body .card-title a");
     console.log(await cardTitle.first().textContent());
@@ -36,16 +40,33 @@ test('Sucessfull login', async({page}) =>{
     await expect(hasTitle).toBeTruthy();
 });
 
-test('Incorrect  username/password.', async({page}) =>{
+test('Incorrect  username/password.', async ({ page }) => {
     await page.goto('https://rahulshettyacademy.com/loginpagePractise/');
-    
-    //get title - assertion
-    await expect(page).toHaveTitle(/LoginPage Practise | Rahul Shetty Academy/);
-    console.log(await page.title());
 
+    //get title - assertion
+    await expect(page).toHaveTitle("LoginPage Practise | Rahul Shetty Academy");
+    console.log(await page.title());
     //selector css,xpath
     await page.locator('#username').fill('Awalker');
     await page.locator("[name='password']").fill('badpassword');
+    //static dropdown selection
+    const dropdown = await page.locator("select.form-control");
+    dropdown.selectOption("consult");
+    //select radio button
+    const userRadioButton = page.locator(".radiotextsty").last();
+    await userRadioButton.click();
+    await page.locator(".btn-success").click();
+    expect(userRadioButton).toBeChecked();
+    // click terms checkbox
+    const termsCheckBox = await page.locator("#terms");
+    await termsCheckBox.click();
+    await expect(termsCheckBox).toBeChecked();
+    await termsCheckBox.uncheck();
+    expect(await termsCheckBox.isChecked()).toBeFalsy();
+    //blink element
+    const blinkingElement = page.locator("[href*='documents-request']");
+    await expect (blinkingElement).toHaveAttribute("class","blinkingText");
+    //click button
     await page.locator(".btn-info").click();
     //wait until locator shown up page
     const failedLoginMsg = await page.locator("[style*='block']");
