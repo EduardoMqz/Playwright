@@ -25,11 +25,20 @@ test("End to end framework", async ({ page }) => {
     await expect(options).toBeVisible();
     await options.locator("button:has-text('Japan')").click();
     expect( await page.locator(".user__name [type='text']").first()).toHaveText(email);
-    
     await page.locator(".action__submit").click();
     await expect(page.locator(".hero-primary")).toHaveText(" Thankyou for the order. ");
     const pageOrderID = await page.locator(".em-spacer-1 .ng-star-inserted").textContent();
-    const orderID = pageOrderID.split(" ")[2];
-
-
+    const OrderID = pageOrderID.split(" ")[2];
+    await page.locator("[routerlink*='myorder']").click();
+    await page.locator("tbody").waitFor();
+    const rows = await page.locator("tbody tr").all();
+    for(const row of rows){
+        const rowOrderID = await row.locator("th").textContent();
+        if(rowOrderID.includes(OrderID)){
+            await row.locator("button.btn-primary").click();
+            break;
+        }
+    const orderIDDetails = await page.locator(".col-text").textContent();
+    expect(orderIDDetails.includes(OrderID)).toBeTruthy();
+    }
 })
